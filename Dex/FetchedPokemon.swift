@@ -62,6 +62,7 @@ struct FetchedPokemon: Decodable {
             let type = try typeContainer.decode(String.self, forKey: .name)
             decodedTypes.append(type)
         }
+        
         types = decodedTypes
         
         var decodedStats: [Int16] = []
@@ -82,7 +83,6 @@ struct FetchedPokemon: Decodable {
         
         let spriteContainer = try container.nestedContainer(keyedBy: CodingKeys.SpriteKeys.self, forKey: .sprites)
         
-//        types = try spriteContainer.decode([String].self, forKey: .types)
         sprite = try spriteContainer.decode(URL.self, forKey: .sprite)
         shiny = try spriteContainer.decode(URL.self, forKey: .shiny)
     }
