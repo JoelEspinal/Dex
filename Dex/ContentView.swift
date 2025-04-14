@@ -120,7 +120,6 @@ struct ContentView: View {
                             }
                         }
                     }
-                    
                 }
                 .navigationTitle(Text("Pokedex"))
                 .searchable(text: $searchText, prompt: "Find a Pokemon")
@@ -146,11 +145,6 @@ struct ContentView: View {
                     .tint(.yellow)
                     
                 }
-                //            ToolbarItem {
-                //                Button("Add Item", systemImage: "plus") {
-                //                    getPokemon()
-                //                }
-                //            }
             }
               .navigationViewStyle(StackNavigationViewStyle())
         }
