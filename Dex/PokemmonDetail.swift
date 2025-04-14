@@ -22,7 +22,7 @@ struct PokemmonDetail: View {
                   .resizable()
                   .scaledToFit()
                   .shadow(color: .black, radius: 6)
-              AsyncImage(url: pokemon.sprite) { image in
+              AsyncImage(url: showShiny ? pokemon.shiny : pokemon.sprite) { image in
                   image
                       .interpolation(.none)
                       .resizable()
@@ -71,8 +71,18 @@ struct PokemmonDetail: View {
               .padding(.bottom, -7)
           
           Stats(pokemon: pokemon)
-          
-      }.navigationTitle(pokemon.name!.capitalized)
+      }
+      .navigationTitle(pokemon.name!.capitalized)
+      .toolbar {
+          Button {
+              showShiny.toggle()
+          } label: {
+              Image(systemName: showShiny ?
+                    "wand.and.stars" :
+                    "wand.and.stars.inverse")
+              .tint(showShiny ? .yellow : .primary)
+          }
+      }
     }
 }
 
