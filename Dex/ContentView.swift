@@ -60,7 +60,7 @@ struct ContentView: View {
                     Section {
                         ForEach(pokedex) { pokemon in
                             NavigationLink(value: pokemon) {
-                                AsyncImage(url: pokemon.sprite) { image in
+                                AsyncImage(url: pokemon.spriteURL) { image in
                                     image
                                         .resizable()
                                         .scaledToFit()
@@ -167,12 +167,32 @@ struct ContentView: View {
                     pokemon.specialAttack = fetchedPokemon.specialAttack
                     pokemon.specialDefence = fetchedPokemon.specialDefense
                     pokemon.speed = fetchedPokemon.speed
-                    pokemon.sprite = fetchedPokemon.sprite
+                    pokemon.spriteURL = fetchedPokemon.spriteURL
+                    pokemon.shinyURL = fetchedPokemon.shinyURL
                     
                     try viewContext.save()
                 } catch {
                     print("THERE WAS AN ERROR: \(error)")
                 }
+            }
+            
+            storeSprites()
+        }
+    }
+    
+    private func storeSprites() {
+        Task {
+            do {
+                for pokemon in all {
+                    pokemon.sprite = try await
+                    URLSession.shared.data(from: pokemon.spriteURL!).0
+                    pokemon.shiny = try await
+                    URLSession.shared.data(from: pokemon.shinyURL!).0
+                    
+                    try viewContext.save()
+                }
+            } catch {
+                print(error)
             }
         }
     }
