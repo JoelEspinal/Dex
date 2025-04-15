@@ -22,15 +22,19 @@ struct PokemmonDetail: View {
                   .resizable()
                   .scaledToFit()
                   .shadow(color: .black, radius: 6)
-              AsyncImage(url: showShiny ? pokemon.shinyURL : pokemon.spriteURL) { image in
-                  image
-                      .interpolation(.none)
-                      .resizable()
-                      .scaledToFit()
-                      .padding(.top, 50)
-                      .shadow(color: .black, radius: 6)
-              } placeholder: {
-                  ProgressView()
+              if pokemon.sprite == nil || pokemon.shiny == nil {
+                  AsyncImage(url: showShiny ? pokemon.shinyURL : pokemon.spriteURL) { image in
+                      image
+                          .interpolation(.none)
+                          .resizable()
+                          .scaledToFit()
+                          .padding(.top, 50)
+                          .shadow(color: .black, radius: 6)
+                  } placeholder: {
+                      ProgressView()
+                  }
+              } else {
+                  (showShiny ? pokemon.shyniImage : pokemon.spriteImage)
               }
           }
           

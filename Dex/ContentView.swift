@@ -60,14 +60,24 @@ struct ContentView: View {
                     Section {
                         ForEach(pokedex) { pokemon in
                             NavigationLink(value: pokemon) {
-                                AsyncImage(url: pokemon.spriteURL) { image in
-                                    image
+                                if pokemon.sprite == nil {
+                                    AsyncImage(url: pokemon.spriteURL) { image in
+                                        image
+                                            .resizable()
+                                            .scaledToFit()
+                                    }
+                                    placeholder: {
+                                        ProgressView()
+                                    }
+                                            .frame(width: 100, height: 100)
+                                    }
+                                else {
+                                    pokemon.spriteImage
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: 100, height: 100)
-                                } placeholder: {
-                                    ProgressView()
                                 }
+                                
                                 HStack {
                                     VStack(alignment: .leading) {
                                         HStack {
@@ -175,7 +185,6 @@ struct ContentView: View {
                     print("THERE WAS AN ERROR: \(error)")
                 }
             }
-            
             storeSprites()
         }
     }
