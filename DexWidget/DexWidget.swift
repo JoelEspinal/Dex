@@ -7,12 +7,32 @@
 
 import WidgetKit
 import SwiftUI
+import CoreData
 
 struct Provider: TimelineProvider {
+    
+    var randomPokemon : Pokemon {
+        var results: [Pokemon] = []
+        
+        do {
+            results = try PersistenceController.shared.container
+                .viewContext.fetch(Pokemon.fetchRequest())
+            
+        } catch {
+            print("Couldn'n fetch. \(error)")
+        }
+        
+        if let randomPokemon = results.randomElement() {
+            return randomPokemon
+        }
+        
+        return PersistenceController.previewPokemon
+    }
+    
     func placeholder(in context: Context) -> SimpleEntry {
         SimpleEntry.placeholder
     }
-    
+//    typealias Entry = <#T##Type#>
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
         let entry = SimpleEntry.placeholder
         completion(entry)
@@ -23,9 +43,13 @@ struct Provider: TimelineProvider {
         
         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry.placeholder
+        for hourOffset in 0 ..< 10 {
+            let entryDate = Calendar.current.date(byAdding: .second, value: hourOffset, to: currentDate)!
+            
+            let entryPokemon = randomPokemon
+            
+            let entry = SimpleEntry(date: entryDate, name: entryPokemon.name!, type: entryPokemon.types!, sprite: entryPokemon.spriteImage)
+            
             entries.append(entry)
         }
         
