@@ -19,7 +19,7 @@ class Pokemon: Decodable {
     var hp: Int
     var attack: Int
     var defense: Int
-    var specialAttack: Int
+    var specialAttack: Int
     var specialDefense: Int
     var speed: Int
     var spriteURL: URL
