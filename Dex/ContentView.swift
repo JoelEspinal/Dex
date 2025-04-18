@@ -6,43 +6,38 @@
 //
 
 import SwiftUI
-import CoreData
+import SwiftData
+import Foundation
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    
-    @FetchRequest<Pokemon>(sortDescriptors: []) private var all
-    
-    @FetchRequest<Pokemon>(
-        sortDescriptors: [SortDescriptor(\.id)],
-        animation: .default
-    ) private var pokedex
-    
+    @Environment(\.modelContext) private var modelContext
+    @Query(animation: .default) private var pokedex: [Pokemon]
+
     @State private var searchText = ""
     @State private var filterByFavorite: Bool = false
-    
+
     let fetcher = FetchService()
-    
-    private var dynamicPredicate: NSPredicate {
-        var predicates: [NSPredicate] = []
-        
-        // Search predicate
-        if !searchText.isEmpty {
-            predicates.append(NSPredicate(format: "name contains[c] %@", searchText))
-        }
-        
-        // FilterByFavorite predicate
-        if filterByFavorite {
-            predicates.append(NSPredicate(format: "favorite == %d", true))
-        }
-        
-        // CombinePredicates
-        return NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-        
+
+    private var filteredPokedex: [Pokemon] {
+        (try? pokedex.filter(dynamicPredicate)) ?? pokedex
     }
-    
+
+    private var dynamicPredicate: Predicate<Pokemon> {
+        #Predicate<Pokemon> { pokemon in
+            if filterByFavorite && !searchText.isEmpty {
+                return pokemon.favorite && pokemon.name.localizedStandardContains(searchText)
+            } else if !searchText.isEmpty {
+                return pokemon.name.localizedStandardContains(searchText)
+            } else if filterByFavorite {
+                return pokemon.favorite
+            } else {
+                return true
+            }
+        }
+    }
+
     var body: some View {
-        if all.isEmpty {
+        if pokedex.isEmpty {
             ContentUnavailableView {
                 Label("No Pokemons", image: .nopokemon)
             } description: {
@@ -53,74 +48,25 @@ struct ContentView: View {
                 }
                 .buttonStyle(.borderedProminent)
             }
-            
         } else {
             NavigationStack {
                 List {
                     Section {
-                        ForEach(pokedex) { pokemon in
+                        ForEach(filteredPokedex) { pokemon in
                             NavigationLink(value: pokemon) {
-                                if pokemon.sprite == nil {
-                                    AsyncImage(url: pokemon.spriteURL) { image in
-                                        image
-                                            .resizable()
-                                            .scaledToFit()
-                                    }
-                                    placeholder: {
-                                        ProgressView()
-                                    }
-                                            .frame(width: 100, height: 100)
-                                    }
-                                else {
-                                    pokemon.spriteImage
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 100, height: 100)
-                                }
-                                
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        HStack {
-                                            Text(pokemon.name!.capitalized)
-                                                .fontWeight(.bold)
-                                            
-                                            if pokemon.favorite {
-                                                Image(systemName: "star.fill")
-                                                    .foregroundStyle(.yellow)
-                                            }
-                                            
-                                        }
-                                        HStack {
-                                            ForEach(pokemon.types!, id: \.self) { type in
-                                                Text(type.capitalized)
-                                                    .font(.subheadline)
-                                                    .fontWeight(.semibold)
-                                                    .foregroundStyle(.black)
-                                                    .padding(.horizontal, 13)
-                                                    .padding(.vertical, 5)
-                                                    .background(Color(type.capitalized))
-                                                    .clipShape(.capsule)
-                                            }
-                                        }
-                                    }
-                                }
-                            }.swipeActions(edge: .leading) {
+                                PokemonRow(pokemon: pokemon)
+                            }
+                            .swipeActions(edge: .leading) {
                                 Button(pokemon.favorite ? "Remove from favorites" : "Add to favorites", systemImage: "star") {
-                                    pokemon.favorite.toggle()
-                                    
-                                    do {
-                                        try viewContext.save()
-                                    } catch {
-                                        print(error)
-                                    }
+                                    toggleFavorite(for: pokemon)
                                 }
                             }
                         }
                     } footer: {
-                        if all.count < 151 {
+                        if pokedex.count < 151 {
                             ContentUnavailableView {
                                 Label("Missing Pokemon", image: .nopokemon)
-                            }  description: {
+                            } description: {
                                 Text("The fetch was interrupted\nFetch the rest of the Pokemon.")
                             } actions: {
                                 Button("Fetch Pokemon", systemImage: "antenna.radiowaves.left.and.right") {
@@ -134,53 +80,42 @@ struct ContentView: View {
                 .navigationTitle(Text("Pokedex"))
                 .searchable(text: $searchText, prompt: "Find a Pokemon")
                 .autocorrectionDisabled()
-                .onChange(of: searchText) {
-                    pokedex.nsPredicate = dynamicPredicate //(for: searchText)
-                }
-                .onChange(of: filterByFavorite) {
-                    pokedex.nsPredicate = dynamicPredicate
-                }
+                .animation(.default, value: searchText)
                 .navigationDestination(for: Pokemon.self) { pokemon in
-                    PokemmonDetail().environmentObject(pokemon)
-                    
+                    PokemonDetail(pokemon: pokemon)
                 }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        filterByFavorite.toggle()
+                        withAnimation {
+                            filterByFavorite.toggle()
+                        }
                     } label: {
                         Label("Filter by Favorite", systemImage: filterByFavorite ? "star.fill" : "star")
                     }
                     .tint(.yellow)
-                    
                 }
             }
-              .navigationViewStyle(StackNavigationViewStyle())
+            .navigationViewStyle(StackNavigationViewStyle())
         }
     }
-    
-    
+
+    private func toggleFavorite(for pokemon: Pokemon) {
+        pokemon.favorite.toggle()
+        do {
+            try modelContext.save()
+        } catch {
+            print(error)
+        }
+    }
+
     private func getPokemon(from id: Int) {
         Task {
             for i in id..<152 {
                 do {
                     let fetchedPokemon = try await fetcher.fetchPokemon(i)
-                    
-                    let pokemon = Pokemon(context: viewContext)
-                    pokemon.id = fetchedPokemon.id
-                    pokemon.name = fetchedPokemon.name
-                    pokemon.types = fetchedPokemon.types
-                    pokemon.hp = fetchedPokemon.hp
-                    pokemon.attack = fetchedPokemon.attack
-                    pokemon.defense = fetchedPokemon.defense
-                    pokemon.specialAttack = fetchedPokemon.specialAttack
-                    pokemon.specialDefence = fetchedPokemon.specialDefense
-                    pokemon.speed = fetchedPokemon.speed
-                    pokemon.spriteURL = fetchedPokemon.spriteURL
-                    pokemon.shinyURL = fetchedPokemon.shinyURL
-                    
-                    try viewContext.save()
+                    modelContext.insert(fetchedPokemon)
                 } catch {
                     print("THERE WAS AN ERROR: \(error)")
                 }
@@ -188,17 +123,14 @@ struct ContentView: View {
             storeSprites()
         }
     }
-    
+
     private func storeSprites() {
         Task {
             do {
-                for pokemon in all {
-                    pokemon.sprite = try await
-                    URLSession.shared.data(from: pokemon.spriteURL!).0
-                    pokemon.shiny = try await
-                    URLSession.shared.data(from: pokemon.shinyURL!).0
-                    
-                    try viewContext.save()
+                for pokemon in pokedex {
+                    pokemon.sprite = try await URLSession.shared.data(from: pokemon.spriteURL).0
+                    pokemon.shiny = try await URLSession.shared.data(from: pokemon.shinyURL).0
+                    modelContext.insert(pokemon)
                 }
             } catch {
                 print(error)
@@ -207,7 +139,58 @@ struct ContentView: View {
     }
 }
 
+// MARK: - Pokemon Row View
 
-#Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+struct PokemonRow: View {
+    let pokemon: Pokemon
+
+    var body: some View {
+        HStack {
+            pokemonImageView(for: pokemon)
+
+            VStack(alignment: .leading) {
+                HStack {
+                    Text(pokemon.name.capitalized)
+                        .fontWeight(.bold)
+                    if pokemon.favorite {
+                        Image(systemName: "star.fill")
+                            .foregroundStyle(.yellow)
+                    }
+                }
+                HStack {
+                    ForEach(pokemon.types, id: \.self) { type in
+                        Text(type.capitalized)
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.black)
+                            .padding(.horizontal, 13)
+                            .padding(.vertical, 5)
+                            .background(Color(type.capitalized))
+                            .clipShape(.capsule)
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func pokemonImageView(for pokemon: Pokemon) -> some View {
+        Group {
+            if pokemon.sprite == nil {
+                AsyncImage(url: pokemon.spriteURL) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                } placeholder: {
+                    ProgressView()
+                }
+                .frame(width: 100, height: 100)
+            } else {
+                pokemon.spriteImage
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 100, height: 100)
+            }
+        }
+    }
 }

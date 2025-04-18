@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 struct FetchService {
     enum FecthError: Error {
         case badResponse

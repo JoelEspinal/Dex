@@ -11,7 +11,11 @@ import SwiftData
 import SwiftUI
 
 @Model
-class Pokemon: Decodable {
+class Pokemon: Decodable, Comparable {
+    static func < (lhs: Pokemon, rhs: Pokemon) -> Bool {
+        lhs.getValue(forKey: \.id) < rhs.getValue(forKey: \.id)
+    }
+    
     @Attribute(.unique) var id: Int
     
     var name: String
@@ -19,7 +23,7 @@ class Pokemon: Decodable {
     var hp: Int
     var attack: Int
     var defense: Int
-    var specialAttack: Int
+    var specialAttack: Int 
     var specialDefense: Int
     var speed: Int
     var spriteURL: URL

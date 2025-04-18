@@ -25,9 +25,12 @@ struct DexApp: App {
         }
     }()
 
+
     var body: some Scene {
         WindowGroup {
             NavigationStack {
+                
+                
                 ContentView()
                     .modelContainer(sharedModelContainer)
             }
