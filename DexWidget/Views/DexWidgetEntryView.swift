@@ -13,8 +13,7 @@ struct DexWidgetEntryView : WidgetBundle {
     
     var body: some Widget {
         DexWidgetCompilation()
-    }
-    
+    } 
 }
 
 struct DexWidgetCompilation : Widget {

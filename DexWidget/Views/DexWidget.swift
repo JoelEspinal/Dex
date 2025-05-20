@@ -6,14 +6,14 @@ struct DexWidget: Widget {
     let kind: String = "DexWidget"
 
     var body: some WidgetConfiguration {
-            StaticConfiguration(
-                kind: "com.joelespinal.pokemon-dex-widget",
-                provider: PokemonProvider(),
-            ) { entry in
-                DexWidgetCompilationView(entry: SimpleEntry.placeholder)
-            }
-            .configurationDisplayName("Game Status")
-            .description("Shows an overview of your game status")
-            .supportedFamilies([.systemSmall])
+        StaticConfiguration(
+            kind: kind,
+            provider: PokemonProvider(),
+        ) { entry in
+            DexWidgetCompilationView(entry: SimpleEntry.placeholder)
+        }
+        .configurationDisplayName("Pokemon Status")
+        .description("Shows an overview of your pokemon status")
+        .supportedFamilies([.systemSmall])
     }
 }

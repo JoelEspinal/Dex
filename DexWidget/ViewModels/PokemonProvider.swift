@@ -68,11 +68,8 @@ struct PokemonProvider: TimelineProvider {
 }
 
 
-
 #Preview(as: .systemSmall) {
-    
-        DexWidget()
-    
+    DexWidget()
 } timeline: {
     SimpleEntry.placeholder
     SimpleEntry.placehoder2
