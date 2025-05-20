@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B4098842DDBCE54006150C8 /* DexApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4098772DDBCE54006150C8 /* DexApp.swift */; };
 		9B4BE1AC2DAE7E6B002CCBB2 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B4BE1AB2DAE7E6B002CCBB2 /* WidgetKit.framework */; };
 		9B4BE1AE2DAE7E6B002CCBB2 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B4BE1AD2DAE7E6B002CCBB2 /* SwiftUI.framework */; };
 		9B4BE1B92DAE7E6D002CCBB2 /* DexWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9B4BE1A92DAE7E6B002CCBB2 /* DexWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -37,6 +38,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9B4098772DDBCE54006150C8 /* DexApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DexApp.swift; sourceTree = "<group>"; };
 		9B4BE1A92DAE7E6B002CCBB2 /* DexWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DexWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B4BE1AB2DAE7E6B002CCBB2 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		9B4BE1AD2DAE7E6B002CCBB2 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -44,6 +46,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		9B4098942DDBEA40006150C8 /* Exceptions for "Models" folder in "DexWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Pokemon.swift,
+			);
+			target = 9B4BE1A82DAE7E6B002CCBB2 /* DexWidgetExtension */;
+		};
 		9B4BE1BD2DAE7E6D002CCBB2 /* Exceptions for "DexWidget" folder in "DexWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -56,13 +65,35 @@
 			membershipExceptions = (
 				Assets.xcassets,
 				Persistence.swift,
-				Pokemon.swift,
 			);
 			target = 9B4BE1A82DAE7E6B002CCBB2 /* DexWidgetExtension */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		9B35BE9A2DDCB19B00AB0C46 /* ViewModels */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		9B4098932DDBE988006150C8 /* Models */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9B4098942DDBEA40006150C8 /* Exceptions for "Models" folder in "DexWidgetExtension" target */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		9B4098952DDBEA72006150C8 /* Views */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Views;
+			sourceTree = "<group>";
+		};
+		9B4098962DDBEAA1006150C8 /* Resources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		9B4BE1AF2DAE7E6B002CCBB2 /* DexWidget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -113,6 +144,11 @@
 		9B7F0BEE2DA8B3E5003EB679 = {
 			isa = PBXGroup;
 			children = (
+				9B35BE9A2DDCB19B00AB0C46 /* ViewModels */,
+				9B4098772DDBCE54006150C8 /* DexApp.swift */,
+				9B4098962DDBEAA1006150C8 /* Resources */,
+				9B4098952DDBEA72006150C8 /* Views */,
+				9B4098932DDBE988006150C8 /* Models */,
 				9B7F0BF92DA8B3E5003EB679 /* Dex */,
 				9B4BE1AF2DAE7E6B002CCBB2 /* DexWidget */,
 				9B4BE1AA2DAE7E6B002CCBB2 /* Frameworks */,
@@ -169,6 +205,10 @@
 				9B4BE1B82DAE7E6D002CCBB2 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				9B35BE9A2DDCB19B00AB0C46 /* ViewModels */,
+				9B4098932DDBE988006150C8 /* Models */,
+				9B4098952DDBEA72006150C8 /* Views */,
+				9B4098962DDBEAA1006150C8 /* Resources */,
 				9B7F0BF92DA8B3E5003EB679 /* Dex */,
 			);
 			name = Dex;
@@ -245,6 +285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B4098842DDBCE54006150C8 /* DexApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
