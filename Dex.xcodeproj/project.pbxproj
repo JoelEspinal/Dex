@@ -84,11 +84,6 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		9B4098952DDBEA72006150C8 /* Views */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Views;
-			sourceTree = "<group>";
-		};
 		9B4098962DDBEAA1006150C8 /* Resources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Resources;
@@ -147,7 +142,6 @@
 				9B35BE9A2DDCB19B00AB0C46 /* ViewModels */,
 				9B4098772DDBCE54006150C8 /* DexApp.swift */,
 				9B4098962DDBEAA1006150C8 /* Resources */,
-				9B4098952DDBEA72006150C8 /* Views */,
 				9B4098932DDBE988006150C8 /* Models */,
 				9B7F0BF92DA8B3E5003EB679 /* Dex */,
 				9B4BE1AF2DAE7E6B002CCBB2 /* DexWidget */,
@@ -207,7 +201,6 @@
 			fileSystemSynchronizedGroups = (
 				9B35BE9A2DDCB19B00AB0C46 /* ViewModels */,
 				9B4098932DDBE988006150C8 /* Models */,
-				9B4098952DDBEA72006150C8 /* Views */,
 				9B4098962DDBEAA1006150C8 /* Resources */,
 				9B7F0BF92DA8B3E5003EB679 /* Dex */,
 			);
@@ -317,6 +310,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
+					"$(SRCROOT)",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.joelespinal.apps.Dex.DexWidget;
@@ -345,6 +339,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
+					"$(SRCROOT)",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.joelespinal.apps.Dex.DexWidget;
@@ -394,6 +389,8 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)";
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphone*]" = "$(SRCROOT)";
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -457,6 +454,8 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)";
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphone*]" = "$(SRCROOT)";
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -492,6 +491,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
+					"$(SRCROOT)",
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
@@ -521,6 +521,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
+					"$(SRCROOT)",
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
