@@ -85,7 +85,6 @@ struct DexWidgetCompilationView: View {
                 Spacer()
             }
             .containerBackground(for: .widget) {
-                Color.yellow
             }
             
             case .systemLarge:
@@ -118,108 +117,12 @@ struct DexWidgetCompilationView: View {
                 }
             }
             .containerBackground(for: .widget) {
-                Color.yellow
             }
             default:
              pokemonImage
             .containerBackground(for: .widget) {
-                Color.yellow
             }
         }
     }
 }
 
-
-//
-//    struct a : View {
-//    
-//    var pokemonImage: some View {
-//       
-//    var pokemonImage: some WidgetConfiguration {
-//        StaticConfiguration(kind: String, provider: TimeProvider()) { entry in
-//            TimeProvider(entry: entry)
-//        }
-//    
-//    @Environment(\.widgetFamily) var widgetSize
-//    var entry: Provider.Entry
-//    
-//    var pokemonImage: some View {
-//        entry.sprite
-//            .interpolation(.none)
-//            .resizable()
-//            .scaledToFit()
-//            .shadow(color: .black,   radius: 6)
-//    }
-//    
-//    var typeView: some View {
-//        ForEach(entry.type, id: \.self) { type in
-//            Text(type.capitalized)
-//                .font(.subheadline)
-//                .fontWeight(.semibold)
-//                .foregroundStyle(.black)
-//                .padding(.horizontal, 13)
-//                .padding(.vertical, 5)
-//                .background(Color(type.capitalized))
-//                .clipShape(.capsule)
-//                .shadow(radius: 3)
-//        }
-//    }
-//
-//    var body: some View {
-//        switch widgetSize {
-//            case .systemMedium:
-//            HStack {
-//                pokemonImage
-//                
-//                Spacer()
-//                
-//                VStack(alignment: .leading) {
-//                    Text(entry.name.capitalized)
-//                        .font(.title)
-//                        .padding(.vertical, 1)
-//                    HStack {
-//                        typeView
-//                    }
-//                }
-//                .layoutPriority(1)
-//                
-//                Spacer()
-//                
-//                
-//            }
-//            
-//            case .systemLarge:
-//            ZStack {
-//                pokemonImage
-//                
-//                VStack(alignment: .leading) {
-//                    Text(entry.name.capitalized)
-//                        .font(.largeTitle)
-//                        .lineLimit(1)
-//                        .minimumScaleFactor(0.75)
-//                    
-//                    Spacer()
-//                    
-//                    HStack {
-//                        Spacer()
-//                        
-//                        ForEach(entry.type, id: \.self) { type in
-//                            Text(type.capitalized)
-//                                .font(.subheadline)
-//                                .fontWeight(.semibold)
-//                                .foregroundStyle(.black)
-//                                .padding(.horizontal, 13)
-//                                .padding(.vertical, 5)
-//                                .background(Color(type.capitalized))
-//                                .clipShape(.capsule)
-//                                .shadow(radius: 3)
-//                        }
-//                    }
-//                }
-//            }
-//            default:
-//             pokemonImage
-//        }
-//       
-//    }
-//}
