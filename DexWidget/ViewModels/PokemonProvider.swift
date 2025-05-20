@@ -9,7 +9,7 @@ import WidgetKit
 import SwiftUI
 import SwiftData
 
-struct Provider: TimelineProvider {
+struct PokemonProvider: TimelineProvider {
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -69,23 +69,25 @@ struct Provider: TimelineProvider {
 
 
 
-//#Preview(as: .systemSmall) {
-//    DexWidget()
-//} timeline: {
-//    SimpleEntry.placeholder
-//    SimpleEntry.placehoder2
-//}
-//
-//#Preview(as: .systemMedium) {
-//    DexWidget()
-//} timeline: {
-//    SimpleEntry.placeholder
-//    SimpleEntry.placehoder2
-//}
-//
-//#Preview(as: .systemLarge) {
-//    DexWidget()
-//} timeline: {
-//    SimpleEntry.placeholder
-//    SimpleEntry.placehoder2
-//}
+#Preview(as: .systemSmall) {
+    
+        DexWidget()
+    
+} timeline: {
+    SimpleEntry.placeholder
+    SimpleEntry.placehoder2
+}
+
+#Preview(as: .systemMedium) {
+    DexWidget()
+} timeline: {
+    SimpleEntry.placeholder
+    SimpleEntry.placehoder2
+}
+
+#Preview(as: .systemLarge) {
+    DexWidget()
+} timeline: {
+    SimpleEntry.placeholder
+    SimpleEntry.placehoder2
+}

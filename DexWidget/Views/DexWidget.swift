@@ -8,7 +8,7 @@ struct DexWidget: Widget {
     var body: some WidgetConfiguration {
             StaticConfiguration(
                 kind: "com.joelespinal.pokemon-dex-widget",
-                provider: Provider(),
+                provider: PokemonProvider(),
             ) { entry in
                 DexWidgetCompilationView(entry: SimpleEntry.placeholder)
             }

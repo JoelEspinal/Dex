@@ -19,7 +19,7 @@ struct DexWidgetEntryView : WidgetBundle {
 
 struct DexWidgetCompilation : Widget {
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: "", provider: Provider()) { entry in
+        StaticConfiguration(kind: "", provider: PokemonProvider()) { entry in
             if #available(iOS 17.0, *) {
                 DexWidgetCompilationView(entry: entry)
                     .foregroundStyle(.black)
@@ -83,8 +83,9 @@ struct DexWidgetCompilationView: View {
                 .layoutPriority(1)
                 
                 Spacer()
-                
-                
+            }
+            .containerBackground(for: .widget) {
+                Color.yellow
             }
             
             case .systemLarge:
@@ -116,10 +117,15 @@ struct DexWidgetCompilationView: View {
                     }
                 }
             }
+            .containerBackground(for: .widget) {
+                Color.yellow
+            }
             default:
              pokemonImage
+            .containerBackground(for: .widget) {
+                Color.yellow
+            }
         }
-       
     }
 }
 
