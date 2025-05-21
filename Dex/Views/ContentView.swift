@@ -139,7 +139,7 @@ struct ContentView: View {
     }
 }
 
-// MARK: - Pokemon Row View
+// MARK: - Pokemon Raw View
 
 struct PokemonRow: View {
     let pokemon: Pokemon
