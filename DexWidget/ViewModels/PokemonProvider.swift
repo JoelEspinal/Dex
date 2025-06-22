@@ -51,7 +51,7 @@ struct PokemonProvider: TimelineProvider {
                     
                     let entryPokemon = results.randomElement()!
                     
-                    let entry = SimpleEntry(date: entryDate, name: entryPokemon.name, type: entryPokemon.types, sprite: entryPokemon.spriteImage)
+                    let entry = SimpleEntry(date: entryDate, name: entryPokemon.name, type: entryPokemon.types ?? [""], sprite: entryPokemon.spriteImage)
                     
                     entries.append(entry)
                 }

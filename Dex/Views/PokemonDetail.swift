@@ -39,7 +39,7 @@ struct PokemonDetail: View {
           }
           
           HStack {
-              ForEach(pokemon.types, id: \.self) { type in
+              ForEach(pokemon.types ?? [""], id: \.self) { type in
                   Text(type.capitalized)
                       .font(.title2)
                       .fontWeight(.semibold)

@@ -7,17 +7,16 @@
 
 import SwiftUI
 import SwiftData
-import Foundation
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query(animation: .default) private var pokedex: [Pokemon]
+    @Query(animation: .default) var pokedex: [Pokemon]
 
     @State private var searchText = ""
     @State private var filterByFavorite: Bool = false
 
-    let fetcher = FetchService()
+    @State var viewModel: ViewModel = ViewModel()
 
+    
     private var filteredPokedex: [Pokemon] {
         (try? pokedex.filter(dynamicPredicate)) ?? pokedex
     }
@@ -35,8 +34,10 @@ struct ContentView: View {
             }
         }
     }
+    
 
     var body: some View {
+        
         if pokedex.isEmpty {
             ContentUnavailableView {
                 Label("No Pokemons", image: .nopokemon)
@@ -103,21 +104,16 @@ struct ContentView: View {
 
     private func toggleFavorite(for pokemon: Pokemon) {
         pokemon.favorite.toggle()
-        do {
-            try modelContext.save()
-        } catch {
-            print(error)
-        }
+        
+        viewModel.save()
     }
 
     private func getPokemon(from id: Int) {
         Task {
             for i in id..<152 {
-                do {
-                    let fetchedPokemon = try await fetcher.fetchPokemon(i)
-                    modelContext.insert(fetchedPokemon)
-                } catch {
-                    print("THERE WAS AN ERROR: \(error)")
+                let pokemon = await viewModel.fetchPokemon(i)
+                if let pokemon {
+                    viewModel.insert(pokemon)
                 }
             }
             storeSprites()
@@ -130,7 +126,7 @@ struct ContentView: View {
                 for pokemon in pokedex {
                     pokemon.sprite = try await URLSession.shared.data(from: pokemon.spriteURL).0
                     pokemon.shiny = try await URLSession.shared.data(from: pokemon.shinyURL).0
-                    modelContext.insert(pokemon)
+                    viewModel.insert(pokemon)
                 }
             } catch {
                 print(error)
@@ -158,7 +154,7 @@ struct PokemonRow: View {
                     }
                 }
                 HStack {
-                    ForEach(pokemon.types, id: \.self) { type in
+                    ForEach(pokemon.types ?? [""], id: \.self) { type in
                         Text(type.capitalized)
                             .font(.subheadline)
                             .fontWeight(.semibold)

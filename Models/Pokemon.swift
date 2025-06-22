@@ -19,7 +19,7 @@ class Pokemon: Decodable, Comparable {
     @Attribute(.unique) var id: Int
     
     var name: String
-    var types: [String]
+    var types: [String]? = []
     var hp: Int
     var attack: Int
     var defense: Int
@@ -119,7 +119,7 @@ class Pokemon: Decodable, Comparable {
     }
     
     var background: ImageResource {
-        switch types[0] {
+        switch types?[0] {
         case "rock", "ground", "steel", "fighting", "ghost", "dark", "psychic":
                 .rockgroundsteelfightingghostdarkpsychic
         case "fire", "dragon":
@@ -136,7 +136,7 @@ class Pokemon: Decodable, Comparable {
     }
     
     var typeColor: Color {
-        Color(types[0].capitalized)
+        Color(types?[0].capitalized ?? "")
     }
 
     var stats: [Stat] {
