@@ -8,19 +8,20 @@
 import SwiftUI
 import SwiftData
 
-struct ContentView: View {
-    @Query(animation: .default) var pokedex: [Pokemon]
 
+struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+    
+    @State var viewModel: ViewModel = ViewModel()
     @State private var searchText = ""
     @State private var filterByFavorite: Bool = false
 
-    @State var viewModel: ViewModel = ViewModel()
 
+//    @Query(animation: .default) var pokedex: [Pokemon]
+//    private var filteredPokedex: [Pokemon] {
+//        (try? pokedex.filter(dynamicPredicate)) ?? pokedex
+//    }
     
-    private var filteredPokedex: [Pokemon] {
-        (try? pokedex.filter(dynamicPredicate)) ?? pokedex
-    }
-
     private var dynamicPredicate: Predicate<Pokemon> {
         #Predicate<Pokemon> { pokemon in
             if filterByFavorite && !searchText.isEmpty {
@@ -34,11 +35,14 @@ struct ContentView: View {
             }
         }
     }
-    
 
     var body: some View {
+        Text("").task {
+            await viewModel.modelContext(modelContext)
+        }
         
-        if pokedex.isEmpty {
+        if viewModel.pokedex.isEmpty {
+            
             ContentUnavailableView {
                 Label("No Pokemons", image: .nopokemon)
             } description: {
@@ -53,7 +57,7 @@ struct ContentView: View {
             NavigationStack {
                 List {
                     Section {
-                        ForEach(filteredPokedex) { pokemon in
+                        ForEach(viewModel.pokedex) { pokemon in
                             NavigationLink(value: pokemon) {
                                 PokemonRow(pokemon: pokemon)
                             }
@@ -64,20 +68,29 @@ struct ContentView: View {
                             }
                         }
                     } footer: {
-                        if pokedex.count < 151 {
+                        if viewModel.pokedex.count < 150 {
                             ContentUnavailableView {
                                 Label("Missing Pokemon", image: .nopokemon)
                             } description: {
                                 Text("The fetch was interrupted\nFetch the rest of the Pokemon.")
                             } actions: {
                                 Button("Fetch Pokemon", systemImage: "antenna.radiowaves.left.and.right") {
-                                    getPokemon(from: pokedex.count + 1)
+//                                    getPokemon(from: pokedex.count + 1)
+                                    Task {
+                                        await viewModel.initPokedex()
+                                    }
+                                    print("Pokemon Count: \(viewModel.pokedex.count)")
                                 }
                                 .buttonStyle(.borderedProminent)
                             }
                         }
                     }
                 }
+//                .onAppear {
+//                    Task {
+//                        await viewModel.modelContext(modelContext)
+//                    }
+//                }
                 .navigationTitle(Text("Pokedex"))
                 .searchable(text: $searchText, prompt: "Find a Pokemon")
                 .autocorrectionDisabled()
@@ -101,7 +114,7 @@ struct ContentView: View {
             .navigationViewStyle(StackNavigationViewStyle())
         }
     }
-
+    
     private func toggleFavorite(for pokemon: Pokemon) {
         pokemon.favorite.toggle()
         
@@ -110,12 +123,7 @@ struct ContentView: View {
 
     private func getPokemon(from id: Int) {
         Task {
-            for i in id..<152 {
-                let pokemon = await viewModel.fetchPokemon(i)
-                if let pokemon {
-                    viewModel.insert(pokemon)
-                }
-            }
+            await viewModel.initPokedex()
             storeSprites()
         }
     }
@@ -123,7 +131,7 @@ struct ContentView: View {
     private func storeSprites() {
         Task {
             do {
-                for pokemon in pokedex {
+                for pokemon in viewModel.pokedex {
                     pokemon.sprite = try await URLSession.shared.data(from: pokemon.spriteURL).0
                     pokemon.shiny = try await URLSession.shared.data(from: pokemon.shinyURL).0
                     viewModel.insert(pokemon)

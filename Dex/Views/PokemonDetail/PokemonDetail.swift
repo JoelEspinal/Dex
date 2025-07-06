@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct PokemonDetail: View {
-    
-    @Environment(\.modelContext) private var modelContext
+
+//    @Environment(\.modelContext) private var modelContext
  
+    @State var viewModel: PokemonDetailViewModel = PokemonDetailViewModel()
+
     var pokemon: Pokemon
     
     @State private var showShiny: Bool = false
@@ -55,13 +58,9 @@ struct PokemonDetail: View {
               
               Button {
                   pokemon.favorite.toggle()
-                  
-                  do {
-                      try modelContext.save()
-                  } catch {
-                      print(error)
+                  Task {
+                      try viewModel.save()
                   }
-                  
               } label: {
                   Image(systemName: pokemon.favorite ? "star.fill" : "star")
                       .font(.largeTitle)

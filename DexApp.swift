@@ -11,9 +11,7 @@ import SwiftData
 @main
 struct DexApp: App {
     
-    
     let sharedModelContainer: ModelContainer
-    let contentView: ContentView
     
     init() {
             sharedModelContainer = {
@@ -28,9 +26,6 @@ struct DexApp: App {
                     fatalError("Could not create ModelContainer: \(error)")
                 }
             }()
-            
-            contentView = ContentView()
-            contentView.viewModel.modelContext(sharedModelContainer)
         }
     
     var body: some Scene {

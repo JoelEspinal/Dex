@@ -15,21 +15,16 @@ extension ContentView {
     @Observable
     class ViewModel {
         
-        private var modelContext: ModelContainer?
+        private var modelContainer: ModelContext? = nil
         private let fetchService: FetchService = FetchService()
+        var pokedex = [Pokemon]()
         
-//        init (modelContext: ModelContainer?) {
-//            if let modelContext = modelContext {
-//                self.modelContext = modelContext
-//            }
-//        }
-        
-        func modelContext(_ modelContext: ModelContainer?) {
+        func modelContext(_ modelContext: ModelContext?) async {
             if let modelContext = modelContext {
-                self.modelContext = modelContext
+                self.modelContainer = modelContext
+                await fetchFromDB()
             }
        }
-        
         
         func fetchPokemon(_ id: Int) async -> Pokemon? {
             do {
@@ -42,18 +37,45 @@ extension ContentView {
             return nil
         }
         
-        
-        //  Storage Methods
         func save()  {
             do {
-                try modelContext?.mainContext.save()
+                try modelContainer?.save()
             } catch {
                 print("Error saving context: \(error)")
             }
         }
         
         func insert(_ pokemon: Pokemon) {
-            modelContext?.mainContext.insert(pokemon)
+            modelContainer?.insert(pokemon)
+        }
+        
+        func fetchFromDB() async {
+            do {
+                if pokedex.isEmpty {
+                    let pokemonArray = try modelContainer?.fetch(FetchDescriptor<Pokemon>())
+                    pokedex = pokemonArray ?? []
+                }
+            } catch {
+                print("Error fetching Pokemon: \(error)")
+    //                return []
+            }
+        }
+        
+        func initPokedex() async {
+            await fetchFromDB()
+            
+            if pokedex.isEmpty {
+                await getPokemons()
+            }
+        }
+        
+        func getPokemons() async {
+            for i in 1..<152 {
+                if let pokemon = await fetchPokemon(i) {
+                    insert(pokemon)
+                }
+            }
+            save()
         }
     }
 }
