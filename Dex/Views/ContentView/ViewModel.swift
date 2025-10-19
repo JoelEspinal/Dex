@@ -18,6 +18,8 @@ extension ContentView {
         private var modelContainer: ModelContext? = nil
         private let fetchService: FetchService = FetchService()
         var pokedex = [Pokemon]()
+        var favorites = [Pokemon]()
+
         
         func modelContext(_ modelContext: ModelContext?) async {
             if let modelContext = modelContext {
@@ -57,7 +59,6 @@ extension ContentView {
                 }
             } catch {
                 print("Error fetching Pokemon: \(error)")
-    //                return []
             }
         }
         
@@ -76,6 +77,14 @@ extension ContentView {
                 }
             }
             save()
+        }
+        
+        func searchFavorites(_ searchText: String) {
+            favorites = pokedex.filter({
+                ($0.favorite == true && $0.name.localizedStandardContains(searchText))
+                || ($0.name.localizedStandardContains(searchText))
+                || $0.favorite == true
+            })
         }
     }
 }
