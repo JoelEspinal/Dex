@@ -22,19 +22,19 @@ struct ContentView: View {
 //        (try? pokedex.filter(dynamicPredicate)) ?? pokedex
 //    }
     
-    private var dynamicPredicate: Predicate<Pokemon> {
-        #Predicate<Pokemon> { pokemon in
-            if filterByFavorite && !searchText.isEmpty {
-                return pokemon.favorite && pokemon.name.localizedStandardContains(searchText)
-            } else if !searchText.isEmpty {
-                return pokemon.name.localizedStandardContains(searchText)
-            } else if filterByFavorite {
-                return pokemon.favorite
-            } else {
-                return true
-            }
-        }
-    }
+//    private var dynamicPredicate: Predicate<Pokemon> {
+//        #Predicate<Pokemon> { pokemon in
+//            if filterByFavorite && !searchText.isEmpty {
+//                return pokemon.favorite && pokemon.name.localizedStandardContains(searchText)
+//            } else if !searchText.isEmpty {
+//                return pokemon.name.localizedStandardContains(searchText)
+//            } else if filterByFavorite {
+//                return pokemon.favorite
+//            } else {
+//                return true
+//            }
+//        }
+//    }
 
     var body: some View {
         Text("").task {
@@ -117,7 +117,6 @@ struct ContentView: View {
     
     private func toggleFavorite(for pokemon: Pokemon) {
         pokemon.favorite.toggle()
-        
         viewModel.save()
     }
 
